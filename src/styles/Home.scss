@@ -1,0 +1,50 @@
+@import "/variables";
+
+body {
+  background-color: $background-1;
+  font-family: $font;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  min-width: fit-content;
+}
+
+main {
+  background-color: $background-2;
+  margin-top: 50px;
+
+  .container {
+    display: flex;
+    justify-content: left;
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: $link-color;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+@media only screen and (max-width: 1024px) {
+  main .container {
+    justify-content: center !important;
+    max-width: 750px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  main .container {
+    justify-content: center !important;
+    max-width: 600px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  main .container {
+    justify-content: center !important;
+    max-width: 400px;
+  }
+}

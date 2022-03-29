@@ -1,0 +1,36 @@
+@import "/variables";
+
+.storyBorder {
+  padding: 2px;
+  background: linear-gradient(
+    200deg,
+    $online-one 25%,
+    $online-two 50%,
+  );
+  border-radius: 50%;
+}
+
+.profileIcon {
+  border-radius: 50%;
+  border: 1.5px solid $link-color-secondary;
+  display: block;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.small {
+    width: 25px;
+    height: 25px;
+  }
+
+  &.medium {
+    width: 35px;
+    height: 35px;
+  }
+
+  &.big {
+    width: 60px;
+    height: 60px;
+  }
+}
