@@ -216,9 +216,8 @@ contract Lixtagram {
             }
         }
     }
-
     
-    function signIn(string memory _name) public payable {
+    function signUp(string memory _name) public payable {
         require(!users[msg.sender], "Already a user");
         Followers memory follEmpty;
         users[msg.sender] = true;
@@ -271,23 +270,16 @@ contract Lixtagram {
     //     }
     // }
 
-    function getUserDetails(address addr)
-        public
-        view
-        returns (string memory, uint256, uint256, uint256, address)
-    {
+    function getUserDetails()public view returns (User[] memory){
+        User[] memory u = new User[](peeps.length);
         for (uint256 i = 0; i < peeps.length; i++) {
-            if (peeps[i].uadd == addr) {
-                User storage user = peeps[i];
-                return (
-                    user.name,
-                    user.tokens,
-                    user.postsCount,
-                    user.redeemTokens,
-                    user.uadd
-                );
+            User storage user = peeps[i];
+            if ( peeps[i].uadd == msg.sender) {
+                u[i] = user;
+                break;
             }
         }
+        return u;
     }
 
     function redeemNTokens(uint256 ntokens, uint256 value) public {
