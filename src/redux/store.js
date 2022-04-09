@@ -12,6 +12,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import postRedux from "./postRedux";
 
 const persistConfig = {
   key: "root",
@@ -21,7 +22,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   initialize: initializeReducer,
-  user: userReducer
+  user: userReducer,
+  post: postRedux
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

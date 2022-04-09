@@ -1,36 +1,37 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+// import { useEffect, useState } from "react";
+// import { useSelector } from "react-redux";
+// import { useHistory } from "react-router-dom";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import LoginLayout from '../components/LoginLayout/Layout';
 import Stepper from '../components/LoginStepperPage/Stepper'
-// import CheckoutPage from './components/CheckoutPage';
+import { setActiveStep } from '../redux/initializeRedux';
 
-function Login() {
+const Login = () => {
+    const dispatch = useDispatch()
     const history = useHistory()
-    const [activeStep, setActiveStep] = useState(0)
-    const isDownloaded = useSelector(state => state.initialize.isDownloaded)
+    const activeStep = useSelector(state => state.initialize.activeStep)
     const network = useSelector(state => state.initialize.networkData)
     const user = useSelector(state => state.user.currUser)
-    
-    useEffect(() => {
-      const step = () => {
-        if(!isDownloaded){
-            setActiveStep(0)
-        }else if(!network){
-            setActiveStep(1)
-        }else if(!user){
-            setActiveStep(2)
-        }else(
-            history.push("/")
-        )
-      }
-      step()
-    }, [isDownloaded, network, user, history])
+    const isDownloaded = useSelector(state => state.initialize.isDownloaded)
 
-    return (
-        <LoginLayout>
-            <Stepper activeStep={activeStep}/>
-        </LoginLayout>
-    );
+    useEffect(() => {
+        if (!isDownloaded) {
+            dispatch(setActiveStep(0))
+        } else if (!network) {
+            dispatch(setActiveStep(1))
+        } else if (!user) {
+            dispatch(setActiveStep(2))
+        }else{
+            history.push("/")
+        }
+      }, [isDownloaded, network, user, dispatch, history])
+
+return (
+    <LoginLayout>
+        <Stepper activeStep={activeStep} />
+    </LoginLayout>
+);
 }
 export default Login;

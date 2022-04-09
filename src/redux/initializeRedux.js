@@ -4,17 +4,21 @@ const initializeSlice = createSlice({
   name: "initialize",
   initialState: {
     isDownloaded: false,
-    networkData: null
+    activeStep: 0,
+    network: null
   },
   reducers: {
     setIsDownloaded: (state, action) => {
       state.isDownloaded = action.payload;
     },
+    setActiveStep: (state, action) => {
+      state.activeStep = action.payload;
+    },
     setNetwork: (state, action) => {
-      state.networkData = action.payload;
+      state.network = action.payload;
     },
   },
 });
 
-export const { setIsDownloaded, setNetwork } = initializeSlice.actions;
+export const { setIsDownloaded, setActiveStep, setNetwork } = initializeSlice.actions;
 export default initializeSlice.reducer;

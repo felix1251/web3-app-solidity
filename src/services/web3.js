@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-
 if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
     //this.setState({ loading: false })
     window.web3 = new Web3(window.ethereum)

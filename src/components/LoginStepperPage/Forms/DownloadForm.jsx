@@ -1,4 +1,4 @@
-import { Button, Grid } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import React from 'react'
 import { ReactComponent as Metamask } from "../../../images/metamaskLogo.svg";
 
@@ -10,7 +10,7 @@ const DownloadForm = () => {
         <Metamask style={{width: "35", height: "35", marginRight: "10px"}}/> Download MetaMask
       </Button>
       <span style={{fontWeight: "700", margin: "10px"}}>Mobile App (Android, IOS)</span>
-      <Button variant='contained' size="large">
+      <Button variant='contained'  color="secondary" size="large">
         <Metamask style={{width: "35", height: "35", marginRight: "10px"}}/> Download MetaMask
       </Button>
     </div>

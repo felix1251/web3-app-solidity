@@ -3,9 +3,9 @@
 .card {
   border: 1px solid $border-color-grey;
   background-color: $background-1;
-  margin-bottom: 1.3em;
+  margin-bottom: 3em;
   border-radius: 10px;
-  
+
   header {
     display: flex;
     justify-content: space-between;
@@ -48,8 +48,8 @@
   }
 
   .timePosted {
-    font-size: 0.7em;
-    padding: 1.5em 1.25em;
+    font-size: 0.6em;
+    padding-left: 2em;
     padding-bottom: 1em;
     color: $font-color-secondary;
     border-bottom: 1px solid $border-color-grey-secondary;
@@ -83,7 +83,6 @@
 
     .timePosted {
       border: none;
-      font-size: 0.8em;
     }
   }
 }

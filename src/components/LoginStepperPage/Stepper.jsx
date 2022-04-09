@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     Stepper,
     Step,
     StepLabel,
 } from "@material-ui/core";
-import { Formik} from "formik";
+import { Formik } from "formik";
 
 import Download from "./Forms/DownloadForm";
 import Signup from "./Forms/SignupForm";
 import Network from "./Forms/NetworkForm";
 import useStyles from "./styles";
-const steps = ["MetaMask", "Network", "Signup"];
-
-function renderStepContent(step) {
-    switch (step) {
-        case 0:
-            return <Download />;
-        case 1:
-            return <Network />;
-        case 2:
-            return <Signup />;
-        default:
-            return <div>Not Found</div>;
-    }
-}
+const steps = ["MetaMask", "Network", "Sign"];
 
 export default function StepperForm(props) {
-    const {activeStep} = props
+    const { activeStep } = props
     const classes = useStyles();
+
+    const renderStepContent = (step) => {        
+        switch (step) {
+            case 0:
+                return <Download />;
+            case 1:
+                return <Network />;
+            case 2:
+                return <Signup />;
+            default:
+                return <div>Not Found</div>;
+        }
+    }
     return (
         <React.Fragment>
             <Stepper activeStep={activeStep} className={classes.stepper}>
