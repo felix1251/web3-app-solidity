@@ -28,6 +28,18 @@ contract Lixtagram {
         uint time;
     }
 
+    struct FilterLikers {
+        address adr;
+        string adrName;
+        uint time;
+    }
+    struct FilterComments {
+        address adr;
+        string adrName;
+        string comment;
+        uint time;
+    }
+
     struct Post {
         uint id;
         string imgIpfsHash;
@@ -35,6 +47,18 @@ contract Lixtagram {
         address owner;
         uint timestamp;
         bool isPublic;
+    }
+
+    struct ViewPost {
+        uint id;
+        string ownerName;
+        string imgIpfsHash;
+        uint256 likes;
+        address owner;
+        uint timestamp;
+        bool isPublic;
+        FilterComments[] comments;
+        FilterLikers[] likers;
     }
 
     //User
@@ -120,7 +144,7 @@ contract Lixtagram {
         return f;
     }
 
-    function followUser(address adr) public {
+    function followUser(address adr) public payable{
         address author = followers[adr][0].follower;
         uint len = followers[adr].length;
         require(msg.sender !=  adr, "you can't folow your own account");
@@ -140,7 +164,7 @@ contract Lixtagram {
         }
     }
 
-    function likePost(uint _id) public {
+    function likePost(uint _id) public payable{
         address author = likers[_id][0].adr;
         require(msg.sender != author, "You own this post!");
         uint len = likers[_id].length;
@@ -193,6 +217,50 @@ contract Lixtagram {
       return c;
     }
 
+    function getViewPost() public view returns (ViewPost[] memory){
+        uint postLength = posts.length;
+        ViewPost[] memory v = new ViewPost[](postLength);
+        for (uint i = 0; i < postLength; i++) {
+            Post storage post = posts[i];
+            if(posts[i].isPublic == true){
+                v[i].id = post.id;
+                v[i].ownerName = getUsername(post.owner);
+                v[i].imgIpfsHash = post.imgIpfsHash;
+                v[i].likes = post.likes;
+                v[i].owner = post.owner;
+                v[i].timestamp = post.timestamp;
+                v[i].isPublic = post.isPublic;
+                v[i].comments = getViewPostComments(post.id);
+                v[i].likers = getViewPostLikers(post.id);
+            }
+        }
+        return v;
+    }
+
+    function getViewPostComments(uint _id) public view returns (FilterComments[] memory){
+        Comments[] memory c = getComments(_id);
+        FilterComments[] memory nc = new FilterComments[](c.length);
+        for(uint i; i < c.length; i++){
+            nc[i].adr = c[i].adr;
+            nc[i].adrName = getUsername(c[i].adr); 
+            nc[i].comment = c[i].comment; 
+            nc[i].time = c[i].time;
+        }
+        return nc;
+     }
+
+     function getViewPostLikers(uint _id) public view returns (FilterLikers[] memory){
+        Likers[] memory l = getLikes(_id);
+        FilterLikers[] memory nl = new FilterLikers[](l.length);
+        for(uint i; i < l.length; i++){
+            nl[i].adr = l[i].adr;
+            nl[i].adrName = getUsername(l[i].adr);
+            nl[i].time = l[i].time;
+        }
+        return nl;
+     }
+     
+
     function getLikes(uint _id) public view returns (Likers[] memory){
       uint len  = likers[_id].length;
       Likers[] memory l = new Likers[](len);
@@ -235,35 +303,6 @@ contract Lixtagram {
     function getPostsCount() public view returns (uint256) {
         return posts.length;
     }
-
-    // function likePost(uint256 index, string memory currAdd) public {
-    //     Post storage currPost = posts[index];
-    //     require(
-    //         !currPost.likedBy[msg.sender],
-    //         "You have already liked this post!"
-    //     );
-    //     require(msg.sender != currPost.owner, "You cannot like your own post!");
-       
-    //     string memory curr = string(
-    //         abi.encodePacked(currPost.likerList, currAdd, "/")
-    //     );
-    //     currPost.likerList = curr;
-    //     currPost.likedBy[msg.sender] = true;
-    //     currPost.likes++;
-
-    //     address author = currPost.owner;
-    //     for (uint256 i = 0; i < peeps.length; i++) {
-    //         if (peeps[i].uadd == author) {
-    //             peeps[i].tokens += 1;
-    //             peeps[i].redeemTokens += 1;
-    //             break;
-    //         }
-    //     }
-    // }
-
-    // function isLiker(uint256 index, address likerAdress) public view returns (bool){  
-    //   return posts[index].likedBy[likerAdress];
-    // }
 
     // function deletePost(uint256 index) public {
     //     Post storage currPost = posts[index];
@@ -308,14 +347,6 @@ contract Lixtagram {
         return users[user];
     }
 
-    // function postComment(uint256 index, string memory comm) public {
-    //     Post storage currPost = posts[index];
-    //     string memory curr = string(
-    //         abi.encodePacked(currPost.comments, comm, "/")
-    //     );
-    //     currPost.comments = curr;
-    // }
-
     // function getPostDetails(string memory postHash)
     //     public
     //     view
@@ -338,18 +369,6 @@ contract Lixtagram {
     //             );
     //         }
     //     }
-    // }
-
-    // function getUserDetails(address adr)public view returns (User[] memory){
-    //     User[] memory u = new User[](peeps.length);
-    //     for (uint256 i = 0; i < peeps.length; i++) {
-    //         User storage user = peeps[i];
-    //         if ( peeps[i].uadd == adr) {
-    //             u[i] = user;
-    //             break;
-    //         }
-    //     }
-    //     return u;
     // }
 
     function getUserDetails(address adr)

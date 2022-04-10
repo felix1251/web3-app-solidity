@@ -56,7 +56,7 @@ function Upload() {
           .createPost(description, imgIpfsHash)
           .send({
             from: accs[0],
-            value: web3.utils.toWei("0.0002", "ether"),
+            value: web3.utils.toWei("0.0001", "ether"),
           });
         setUploading(false)
         setDescription("")
@@ -133,6 +133,7 @@ function Upload() {
             style={{ display: 'none' }}
             id="raised-button-file"
             type="file"
+            disabled={uploading}
             accept="image/png, image/jpg, image/jpeg"
             onChange={(event) => captureFile(event)}
           />

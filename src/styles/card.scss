@@ -43,14 +43,13 @@
   }
 
   .comments {
-    margin-bottom: 0.75em;
+    margin-bottom: 0.60em;
     color: $font-color-primary;
   }
 
   .timePosted {
     font-size: 0.7em;
-    padding: 1.5em 1.25em;
-    padding-bottom: 1em;
+    padding: 1em 1.60em;
     color: $font-color-secondary;
     border-bottom: 1px solid $border-color-grey-secondary;
   }
@@ -59,7 +58,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.85em;
-    padding: 1.5em 1.25em;
+    padding: 1.5em 1.35em;
 
     .commentText {
       color: $font-color-secondary;
@@ -83,7 +82,6 @@
 
     .timePosted {
       border: none;
-      font-size: 0.8em;
     }
   }
 }

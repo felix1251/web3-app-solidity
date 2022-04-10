@@ -10,8 +10,6 @@ body {
 }
 
 main {
-  margin-top: 50px;
-
   .container {
     display: flex;
     justify-content: left;
@@ -38,6 +36,7 @@ a {
   main .container {
     justify-content: center !important;
     max-width: 600px;
+    margin-top: 50px;
   }
 }
 
@@ -45,5 +44,6 @@ a {
   main .container {
     justify-content: center !important;
     max-width: 400px;
+    margin-top: 50px;
   }
 }

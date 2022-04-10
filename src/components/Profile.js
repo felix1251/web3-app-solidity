@@ -2,6 +2,7 @@ import "../styles/profile.scss";
 import ProfileIcon from "./ProfileIcon";
 import { useSelector } from "react-redux";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Web3 from "web3";
 
 function Profile(props) {
   const {
@@ -20,11 +21,15 @@ function Profile(props) {
   const user = useSelector(state => state.user.currUser)
   const accountName = username
 
+  window.web3 = new Web3(window.ethereum)
+  var web3 = window.web3
+
   const followUser = async(event) => {
     if(follow === "Follow"){
       event.preventDefault()
       await lixtagram.methods.followUser(currUser).send({
         from: user?.uadd,
+        value: web3.utils.toWei("0.0001", "ether"),
       });
       setIsFollowed(true)
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "../styles/content.scss";
 // import Stories from "./Stories";
 import Lixtagram from "../abis/Lixtagram.json"
@@ -21,7 +21,7 @@ const Content = () => {
         const networkId = await web3.eth.net.getId();
         const networkData = Lixtagram.networks[networkId];
         const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
-        const post = await lixtagram.methods.getPostIsPublic().call()
+        const post = await lixtagram.methods.getViewPost().call()
         setLixtagram(lixtagram)
         setPublicPost(post)
       }
@@ -54,11 +54,14 @@ const Content = () => {
           {publicPost.map((p) => (
             <Card
               key={p.id}
-              accountName={p.owner}
+              ownerAdr={p.owner}
+              ownerName = {p.ownerName}
               storyBorder={false}
               lixtagram={lixtagram}
               image={ipfsUrl + p.imgIpfsHash}
               postId={p.id}
+              comments={p.comments}
+              likes={p.likers}
               // likedByText="dadatlacak"
               // likedByNumber={89}
               time={p.timestamp}

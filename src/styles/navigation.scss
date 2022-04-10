@@ -1,7 +1,7 @@
 @import "/variables";
 
 .navigation {
-  position: fixed;
+  position: sticky;
   top: 0;
   z-index: 2;
   background-color: $background-1;
@@ -49,7 +49,16 @@
   }
 }
 
+@media only screen and (max-width: 800px) {
+  .navigation{
+    position: fixed;
+  }
+}
+
 @media only screen and (max-width: 500px) {
+  .navigation{
+    position: fixed;
+  }
   .search {
     display: none !important;
   }
