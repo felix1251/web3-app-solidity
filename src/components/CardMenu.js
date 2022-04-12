@@ -16,7 +16,7 @@ function CardMenu(props) {
     event.preventDefault()
     await lixtagram.methods.likePost(postId).send({
       from: acc,
-      value: web3.utils.toWei("0.0001", "ether"),
+      value: web3.utils.toWei("0.002", "ether"),
     });
     setIsLiker(true)
   }

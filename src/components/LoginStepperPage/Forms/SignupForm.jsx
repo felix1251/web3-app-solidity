@@ -23,7 +23,7 @@ const SignupForm = () => {
     try {
       await lixtagram.methods.signUp(name).send({
         from: accs[0],
-        value: web3.utils.toWei("0.0001", "ether"),
+        value: web3.utils.toWei("0.001", "ether"),
       });
       const userDetails = await lixtagram.methods.getUserDetails(accs[0]).call();
       const currUser = {

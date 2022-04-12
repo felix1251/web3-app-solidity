@@ -15,13 +15,16 @@ const Content = () => {
   
   useEffect(() => {
     const load = async () => {
-      if (user) {
+      if (user?.name) {
         window.web3 = new Web3(window.ethereum)
         var web3 = window.web3
         const networkId = await web3.eth.net.getId();
         const networkData = Lixtagram.networks[networkId];
         const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
         const post = await lixtagram.methods.getViewPost().call()
+        const contractBalance = await lixtagram.methods.getContractBalance().call()
+        console.log("Contract balance in ether: ",contractBalance/10**18)
+        console.log("Contract balance in wei: ", contractBalance*1)
         setLixtagram(lixtagram)
         setPublicPost(post)
       }

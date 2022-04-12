@@ -56,7 +56,7 @@ function Upload() {
           .createPost(description, imgIpfsHash)
           .send({
             from: accs[0],
-            value: web3.utils.toWei("0.0001", "ether"),
+            value: web3.utils.toWei("0.001", "ether"),
           });
         setUploading(false)
         setDescription("")

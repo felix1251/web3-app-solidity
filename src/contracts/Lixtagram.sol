@@ -33,6 +33,7 @@ contract Lixtagram {
         string adrName;
         uint time;
     }
+
     struct FilterComments {
         address adr;
         string adrName;
@@ -62,17 +63,17 @@ contract Lixtagram {
     }
 
     //User
-    mapping(address => bool) public users;
-    mapping(address => Followers[]) public followers;
-    mapping(uint => Likers[]) public likers;
-    mapping(uint => Comments[]) public comments;
-    mapping(address => uint[]) public userPostPublicIndex;
-    mapping(address => uint[]) public userPostPrivateIndex;
-    mapping(address => uint[]) public userAllPost;
-    mapping(address => string) public username;
+    mapping(address => bool) private users;
+    mapping(address => Followers[]) private followers;
+    mapping(uint => Likers[]) private likers;
+    mapping(uint => Comments[]) private comments;
+    mapping(address => uint[]) private userPostPublicIndex;
+    mapping(address => uint[]) private userPostPrivateIndex;
+    mapping(address => uint[]) private userAllPost;
+    mapping(address => string) private username;
 
-    User[] public peeps;
-    Post[] public posts;
+    User[] private peeps;
+    Post[] private posts;
    
     //constructor 
     string public name;
@@ -154,6 +155,7 @@ contract Lixtagram {
                 break;
             }
         }
+
         followers[adr].push(Followers(msg.sender, now));
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == author) {
@@ -208,7 +210,7 @@ contract Lixtagram {
         return p;
     }
 
-    function getComments(uint _id) public view returns (Comments[] memory){
+    function getComments(uint _id) private view returns (Comments[] memory){
       uint len  = comments[_id].length;
       Comments[] memory c = new Comments[](len);
       for(uint i =0 ; i < len; i++){
@@ -237,7 +239,7 @@ contract Lixtagram {
         return v;
     }
 
-    function getViewPostComments(uint _id) public view returns (FilterComments[] memory){
+    function getViewPostComments(uint _id) private view returns (FilterComments[] memory){
         Comments[] memory c = getComments(_id);
         FilterComments[] memory nc = new FilterComments[](c.length);
         for(uint i; i < c.length; i++){
@@ -249,7 +251,7 @@ contract Lixtagram {
         return nc;
      }
 
-     function getViewPostLikers(uint _id) public view returns (FilterLikers[] memory){
+     function getViewPostLikers(uint _id) private view returns (FilterLikers[] memory){
         Likers[] memory l = getLikes(_id);
         FilterLikers[] memory nl = new FilterLikers[](l.length);
         for(uint i; i < l.length; i++){
@@ -261,7 +263,7 @@ contract Lixtagram {
      }
      
 
-    function getLikes(uint _id) public view returns (Likers[] memory){
+    function getLikes(uint _id) private view returns (Likers[] memory){
       uint len  = likers[_id].length;
       Likers[] memory l = new Likers[](len);
       for(uint i =0 ; i < len; i++){
@@ -279,7 +281,7 @@ contract Lixtagram {
       return f;
     }
 
-    function getUsername(address adr) public view returns (string memory){
+    function getUsername(address adr) private view returns (string memory){
         return username[adr];
     }
 
@@ -287,18 +289,17 @@ contract Lixtagram {
         return followers[adr].length;
     }
 
-    function getPostIsPublic() public view returns (Post[] memory){
-        uint postLength = posts.length;
-        Post[] memory p = new Post[](postLength);
-        for (uint i = 0; i < postLength; i++) {
-            Post storage post = posts[i];
-            if(posts[i].isPublic == true){
-                p[i] = post;
-            }
-        }
-        return p;
-    }
-
+    // function getPostIsPublic() public view returns (Post[] memory){
+    //     uint postLength = posts.length;
+    //     Post[] memory p = new Post[](postLength);
+    //     for (uint i = 0; i < postLength; i++) {
+    //         Post storage post = posts[i];
+    //         if(posts[i].isPublic == true){
+    //             p[i] = post;
+    //         }
+    //     }
+    //     return p;
+    // }
 
     function getPostsCount() public view returns (uint256) {
         return posts.length;
@@ -343,7 +344,7 @@ contract Lixtagram {
         followers[msg.sender].push(Followers(msg.sender, now));
     }
 
-    function isUser(address user) public view returns (bool) {
+    function isUser(address user) private view returns (bool) {
         return users[user];
     }
 
@@ -394,11 +395,13 @@ contract Lixtagram {
         }
         return (n, tokens, postsCount, redeemTokens, uadd);
     }
-
-    function redeemNTokens(uint256 ntokens, uint256 value) public {
-        address(uint256(msg.sender)).transfer(value);
+ 
+    function redeemNTokens(uint256 ntokens, uint256 valueWie) public {
+        require(ntokens >= 20 || ntokens != 0, "input value is not allowed, only equal or greater than 20 is allowed and input must not zero" ); 
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == msg.sender) {
+                require(peeps[i].redeemTokens >= 20 || peeps[i].redeemTokens > ntokens, "Didn't reach redeem requirements or validation failed" ); 
+                address(uint256(msg.sender)).transfer(valueWie);
                 peeps[i].redeemTokens -= ntokens;
                 break;
             }
@@ -409,7 +412,7 @@ contract Lixtagram {
         chatHash = chash;
     }
 
-    function getContractBalance() public view returns (uint256) {
+    function getContractBalance() public view returns (uint) {
         return address(this).balance;
     }
     

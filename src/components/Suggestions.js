@@ -12,26 +12,31 @@ function Suggestions() {
       </div>
       {user ? <>
         <Profile
+          currUser={"hahaha"}
           caption="Followed by mapvault + 3 more"
           urlText="Follow"
           iconSize="medium"
           captionSize="small"/>
         <Profile
+          currUser={"normaldude"}
           caption="Followed by dadatlacak + 1 more"
           urlText="Follow"
           iconSize="medium"
           captionSize="small" />
         <Profile
+          currUser={"watsup"}
           caption="Follows you"
           urlText="Follow"
           iconSize="medium"
           captionSize="small" />
         <Profile
+          currUser={"watsupdude"}
           caption="Followed by dadatlacak + 7 more"
           urlText="Follow"
           iconSize="medium"
           captionSize="small" />
         <Profile
+          currUser={"girl"}
           caption="Followed by mapvault + 4 more"
           urlText="Follow"
           iconSize="medium"

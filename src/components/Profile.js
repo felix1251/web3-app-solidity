@@ -29,7 +29,7 @@ function Profile(props) {
       event.preventDefault()
       await lixtagram.methods.followUser(currUser).send({
         from: user?.uadd,
-        value: web3.utils.toWei("0.0001", "ether"),
+        value: web3.utils.toWei("0.001", "ether"),
       });
       setIsFollowed(true)
     }
