@@ -4,6 +4,7 @@ import ipfs from "../services/ipfs";
 import Resizer from "react-image-file-resizer";
 import { Button, TextField } from "@material-ui/core";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const ipfsUrl = "https://ipfs.io/ipfs/"
 
@@ -35,8 +36,10 @@ const styles = {
   }
 }
 
-function Upload() {
+function Upload(props) {
+  const {onClose} = props
   const classes = styles
+  const history = useHistory()
   const [imgIpfsHash, setImgIpfsHash] = useState("")
   const [description, setDescription] = useState("")
   const [uploading, setUploading] = useState(false)
@@ -60,6 +63,8 @@ function Upload() {
           });
         setUploading(false)
         setDescription("")
+        onClose(false)
+        history.push("/profile")
       } catch (err) {
         console.log(err.message)
         setUploading(false)

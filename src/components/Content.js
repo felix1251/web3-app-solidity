@@ -12,47 +12,34 @@ const Content = () => {
   const [publicPost, setPublicPost] = useState([])
   const [lixtagram, setLixtagram] = useState(null)
   const user = useSelector(state => state.user.currUser)
-  
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     const load = async () => {
       if (user?.name) {
-        window.web3 = new Web3(window.ethereum)
-        var web3 = window.web3
-        const networkId = await web3.eth.net.getId();
-        const networkData = Lixtagram.networks[networkId];
-        const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
-        const post = await lixtagram.methods.getViewPost().call()
-        const contractBalance = await lixtagram.methods.getContractBalance().call()
-        console.log("Contract balance in ether: ",contractBalance/10**18)
-        console.log("Contract balance in wei: ", contractBalance*1)
-        setLixtagram(lixtagram)
-        setPublicPost(post)
+        setLoading(true)
+        try {
+          window.web3 = new Web3(window.ethereum)
+          var web3 = window.web3
+          const networkId = await web3.eth.net.getId();
+          const networkData = Lixtagram.networks[networkId];
+          const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
+          const post = await lixtagram.methods.getViewPost().call()
+          setLixtagram(lixtagram)
+          setPublicPost(post)
+          setLoading(false)
+        } catch (error) {
+          console.log(error.message)
+          setLoading(true)
+        }
       }
     }
     load()
   }, [user])
 
-  // const commentsOne = [
-  //   {
-  //     user: "raffagrassetti",
-  //     text: "Woah dude, this is awesome! 🔥",
-  //     id: 1,
-  //   },
-  //   {
-  //     user: "therealadamsavage",
-  //     text: "Like!",
-  //     id: 2,
-  //   },
-  //   {
-  //     user: "mapvault",
-  //     text: "Niceeeee!",
-  //     id: 3,
-  //   },
-  // ];
-
   return (
     <div className="content">
-      {user?.name ?
+      {user?.name?
         <>
           {publicPost.map((p) => (
             <Card

@@ -9,6 +9,7 @@ import image from "../images/profile.jpg";
 import UploadPhoto from "./Upload";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Menu() {
   const user = useSelector(state => state.user.currUser)
@@ -17,19 +18,26 @@ function Menu() {
   const onOpen = () => {
     setOpen(true)
   }
+  const onClose = () => {
+    setOpen(false)
+  }
   const content = () => {
     return (
-     <UploadPhoto/>
+     <UploadPhoto onClose={onClose}/>
     )
   }
   return (
     <div className="menu">
       <Modal open={open} content={content()} setOpen={setOpen}/>
-      <Home className="icon" />
+      <Link to="/">
+        <Home className="icon" />
+      </Link>
       <Upload className="icon" onClick={onOpen}/>
       <Notification className="icon" />
       <About className="icon" />
-      <ProfileIcon iconSize="small" image={image} currUser={user?.uadd}/>
+      <Link to="/profile">
+        <ProfileIcon iconSize="small" image={image} currUser={user?.uadd}/>
+      </Link>
     </div>
   );
 }

@@ -95,6 +95,7 @@ contract Lixtagram {
         string memory description,
         string memory imgIpfsHash
     ) public payable {
+        allPostCount++;
         if(posts.length == 0){
             allPostCount = 0;
         }
@@ -108,13 +109,12 @@ contract Lixtagram {
             timestamp: now,
             isPublic: true
         });
-
         posts.push(newPost);
+
         likers[randomId].push(Likers(msg.sender, now));
         comments[randomId].push(Comments(msg.sender, description ,now));
         userPostPublicIndex[msg.sender].push(allPostCount);
         userAllPost[msg.sender].push(allPostCount);
-
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == msg.sender) {
                 peeps[i].postsCount++;
@@ -122,6 +122,28 @@ contract Lixtagram {
             }
         }
     }
+
+    function signUp(string memory _name) public payable {
+        require(!users[msg.sender], "Already a user");
+        users[msg.sender] = true;
+        username[msg.sender] = _name;
+        userCount++;
+        User memory newUser = User({
+            name: _name,
+            profilePic: "",
+            uadd: msg.sender,
+            tokens: 0,
+            redeemTokens: 0,
+            postsCount: 0
+        });
+        peeps.push(newUser);
+        followers[msg.sender].push(Followers(msg.sender, now));
+    }
+
+    function isUser(address user) private view returns (bool) {
+        return users[user];
+    }
+
 
     function isLiker(address user, uint _id) public view returns(bool){
         bool f;
@@ -327,27 +349,6 @@ contract Lixtagram {
         }
     }
     
-    function signUp(string memory _name) public payable {
-        require(!users[msg.sender], "Already a user");
-        users[msg.sender] = true;
-        username[msg.sender] = _name;
-        userCount++;
-        User memory newUser = User({
-            name: _name,
-            profilePic: "",
-            uadd: msg.sender,
-            tokens: 0,
-            redeemTokens: 0,
-            postsCount: 0
-        });
-        peeps.push(newUser);
-        followers[msg.sender].push(Followers(msg.sender, now));
-    }
-
-    function isUser(address user) private view returns (bool) {
-        return users[user];
-    }
-
     // function getPostDetails(string memory postHash)
     //     public
     //     view
@@ -397,7 +398,9 @@ contract Lixtagram {
     }
  
     function redeemNTokens(uint256 ntokens, uint256 valueWie) public {
-        require(ntokens >= 20 || ntokens != 0, "input value is not allowed, only equal or greater than 20 is allowed and input must not zero" ); 
+        uint oneIsEqualToWie = 1000000000000000;
+        uint valueInWie = oneIsEqualToWie*ntokens;
+        require(ntokens >= 20 || ntokens != 0 || valueInWie == valueWie, "input value is not allowed, only equal or greater than 20 is allowed and input must not zero" ); 
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == msg.sender) {
                 require(peeps[i].redeemTokens >= 20 || peeps[i].redeemTokens > ntokens, "Didn't reach redeem requirements or validation failed" ); 

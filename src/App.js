@@ -7,6 +7,8 @@ import {
   Redirect,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import Navigation from "./components/Navigation";
+import Profile from "./pages/Profile";
 // import Login from "./pages/Login";
 import { setActiveStep, setIsDownloaded, setNetwork } from "./redux/initializeRedux";
 import Lixtagram from "./abis/Lixtagram.json"
@@ -58,9 +60,6 @@ export default function App() {
         dispatch(setAddress(accs[0]))
         const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
         const userDetails = await lixtagram.methods.getUserDetails(accs[0]).call()
-        // const userPost = await lixtagram.methods.getuserIndexPost(accs[0]).call()
-        // const f = await lixtagram.methods.isFollowed(accs[0]).call()
-        // console.log(f)
         const currUser = {
           name: userDetails[0],
           tokens: userDetails[1],
@@ -103,9 +102,13 @@ export default function App() {
   return (
     <Router>
       <Modal open={modal} content={content()} />
+      <Navigation />
       <Switch>
         <Route exact path="/">
           <Home />
+        </Route>
+        <Route exact path="/profile">
+          <Profile />
         </Route>
         <Redirect from="*" to="/" />
       </Switch>

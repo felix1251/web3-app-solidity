@@ -1,0 +1,24 @@
+.wrap{
+    position: relative;
+}
+.post {
+    cursor: pointer;
+    width: 220px;
+    height: 200px;
+    object-fit: cover;
+   
+    @media only screen and (max-width: 800px) {
+        width: 180px;
+        height: 160px;
+    }
+
+    @media only screen and (max-width: 650px) {
+        width: 150px;
+        height: 130px;
+    }
+      
+    @media only screen and (max-width: 500px) {
+        width: 120px;
+        height: 100px;
+    }
+}
