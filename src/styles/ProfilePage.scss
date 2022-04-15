@@ -1,56 +1,25 @@
 @import "/variables";
 
-body {
+
+.main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
   background-color: $background-2;
   font-family: $font;
   font-size: 16px;
-  margin: 0;
-  padding: 0;
-  min-width: fit-content;
-}
-
-main {
-  .main {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    max-width: 935px;
-    @media only screen and (max-width: 735px) {
-      padding: 0;
-    }
-  }
-  .profile-card {
-    display: flex;
-    margin-top: 10px;
+  @media only screen and (max-width: 640px) {
+    background-color: $background-1;
   }
 }
 
-a {
-  text-decoration: none;
-  color: $link-color;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-@media only screen and (max-width: 1024px) {
-  main .main {
-    justify-content: center !important;
-    max-width: 750px;
-  }
+.profile-card {
+  display: flex;
+  margin-top: 12px;
 }
 
 @media only screen and (max-width: 800px) {
-  main .main {
-    justify-content: center !important;
-    max-width: 600px;
-    margin-top: 50px;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  main .main {
-    justify-content: center !important;
-    max-width: 400px;
+  .main {
     margin-top: 50px;
   }
 }

@@ -7,6 +7,9 @@ body {
   margin: 0;
   padding: 0;
   min-width: fit-content;
+  @media only screen and (max-width: 640px) {
+    background-color: $background-1;
+  }
 }
 
 main {

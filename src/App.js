@@ -40,13 +40,6 @@ export default function App() {
         await window.ethereum.on("accountsChanged", () => { window.location.reload() });
         dispatch(setIsDownloaded(true))
         loadUser()
-      } else if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
-        window.web3 = new Web3(window.web3.currentProvider)
-        window.ethereum.request({ method: 'eth_requestAccounts' })
-        window.ethereum.on('chainChanged', () => { window.location.reload() })
-        window.ethereum.on('accountsChanged', () => { window.location.reload() })
-        dispatch(setIsDownloaded(true))
-        loadUser()
       } else {
         dispatch(setIsDownloaded(false))
       }
@@ -65,7 +58,9 @@ export default function App() {
           tokens: userDetails[1],
           postsCount: userDetails[2],
           redeemTokens: userDetails[3],
-          uadd: userDetails[4]
+          uadd: userDetails[4],
+          followerCount: userDetails[5],
+          followers: userDetails[6],
         }
         dispatch(setUser(currUser))
         

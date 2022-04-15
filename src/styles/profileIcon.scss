@@ -36,5 +36,9 @@
   &.extra-big {
     width: 90px;
     height: 90px;
+    @media only screen and (max-width: 650px) {
+      width: 60px;
+      height: 60px;
+  }
   }
 }

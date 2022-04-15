@@ -43,7 +43,7 @@
   }
 
   .comments {
-    margin-bottom: 0.60em;
+    margin-bottom: 0.50em;
     color: $font-color-primary;
   }
 
@@ -73,13 +73,13 @@
 @media only screen and (max-width: 640px) {
   .card {
     border: none;
-    background-color: $background-2;
     margin-bottom: 0.75em;
-
+    .comments {
+      margin-bottom: 0.3em;
+    }
     .addComment {
       display: none;
     }
-
     .timePosted {
       border: none;
     }

@@ -18,6 +18,7 @@ function Profile(props) {
     lixtagram,
     setIsFollowed
   } = props;
+  
   const user = useSelector(state => state.user.currUser)
   const accountName = username
 

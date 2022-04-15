@@ -376,25 +376,30 @@ contract Lixtagram {
     function getUserDetails(address adr)
         public
         view
-        returns (string memory, uint256, uint256, uint256, address)
+        returns (string memory, uint256, uint256, uint256, address, uint256, Followers[] memory)
     {
         string memory n;
         uint tokens;
         uint postsCount;
         uint redeemTokens;
         address uadd;
+        uint followerCount;
+        Followers[] memory f;
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == adr) {
                 User storage user = peeps[i];
+                f = followers[user.uadd];
+                uint len  = followers[user.uadd].length;
                 n = user.name;
                 tokens = user.tokens;
                 postsCount = user.postsCount;
                 redeemTokens = user.redeemTokens;
                 uadd = user.uadd;
+                followerCount = len - 1;
                 break;
             }
         }
-        return (n, tokens, postsCount, redeemTokens, uadd);
+        return (n, tokens, postsCount, redeemTokens, uadd, followerCount, f);
     }
  
     function redeemNTokens(uint256 ntokens, uint256 valueWie) public {
