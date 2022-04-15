@@ -1,5 +1,6 @@
 .wrap{
     position: relative;
+    align-items: center;
     display: flex;
     justify-content: center;
 }
@@ -23,4 +24,9 @@
         width: 115px;
         height: 95px;
     }
+    @media only screen and (max-width: 360px) {
+        width: 105px;
+        height: 85px;
+    }
+    
 }

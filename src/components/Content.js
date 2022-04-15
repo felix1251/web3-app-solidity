@@ -13,7 +13,6 @@ const Content = () => {
   const [lixtagram, setLixtagram] = useState(null)
   const user = useSelector(state => state.user.currUser)
   const [loading, setLoading] = useState(false)
-
   useEffect(() => {
     const load = async () => {
       if (user?.name) {

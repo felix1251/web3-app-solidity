@@ -8,6 +8,11 @@ contract Lixtagram {
         uint time;
     }
 
+    struct Followings {
+        address followed;
+        uint time;
+    }
+
     struct User {
         string name;
         string profilePic;
@@ -65,6 +70,7 @@ contract Lixtagram {
     //User
     mapping(address => bool) private users;
     mapping(address => Followers[]) private followers;
+    mapping(address => Followings[]) private followings;
     mapping(uint => Likers[]) private likers;
     mapping(uint => Comments[]) private comments;
     mapping(address => uint[]) private userPostPublicIndex;
@@ -110,7 +116,6 @@ contract Lixtagram {
             isPublic: true
         });
         posts.push(newPost);
-
         likers[randomId].push(Likers(msg.sender, now));
         comments[randomId].push(Comments(msg.sender, description ,now));
         userPostPublicIndex[msg.sender].push(allPostCount);
@@ -177,8 +182,8 @@ contract Lixtagram {
                 break;
             }
         }
-
         followers[adr].push(Followers(msg.sender, now));
+        followings[msg.sender].push(Followings(adr, now));
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == author) {
                 peeps[i].tokens += 1;
@@ -373,33 +378,42 @@ contract Lixtagram {
     //     }
     // }
 
+     function getFollowedAndFollowersCount(address adr) public view returns (uint, uint) {
+        uint len = followers[adr].length;
+        uint len2 =  followings[adr].length;
+        return(len, len2);
+    }
+
+    function getFollowedAndFollowers(address adr) public view returns (Followers[] memory, Followings[] memory) {
+        Followers[] memory f;
+        Followings[] memory fw;
+        f = followers[adr];
+        fw = followings[adr];
+        return(f, fw);
+    }
+
     function getUserDetails(address adr)
         public
         view
-        returns (string memory, uint256, uint256, uint256, address, uint256, Followers[] memory)
+        returns (string memory, uint256, uint256, uint256, address)
     {
         string memory n;
         uint tokens;
         uint postsCount;
         uint redeemTokens;
         address uadd;
-        uint followerCount;
-        Followers[] memory f;
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == adr) {
                 User storage user = peeps[i];
-                f = followers[user.uadd];
-                uint len  = followers[user.uadd].length;
                 n = user.name;
                 tokens = user.tokens;
                 postsCount = user.postsCount;
                 redeemTokens = user.redeemTokens;
                 uadd = user.uadd;
-                followerCount = len - 1;
                 break;
             }
         }
-        return (n, tokens, postsCount, redeemTokens, uadd, followerCount, f);
+        return (n, tokens, postsCount, redeemTokens, uadd);
     }
  
     function redeemNTokens(uint256 ntokens, uint256 valueWie) public {

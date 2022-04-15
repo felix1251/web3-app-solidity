@@ -10,6 +10,7 @@ import Profile from "../components/Profile";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import ImageIcon from '@material-ui/icons/Image';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 
 function a11yProps(index) {
@@ -181,6 +182,7 @@ const ProfilePage = () => {
   const user = useSelector(state => state.user.currUser)
   const [userPost, setUserPost] = useState([])
   const [value, setValue] = useState(0);
+  const [folValue, setFolValue] = useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -197,6 +199,12 @@ const ProfilePage = () => {
         const networkData = Lixtagram.networks[networkId];
         const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
         const userPost = await lixtagram.methods.getUserPublicPost(user?.uadd).call()
+        const fol = await lixtagram.methods.getFollowedAndFollowers(user?.uadd).call()
+        const value = {
+          followers: fol[2],
+          following: fol[3],
+        }
+        setFolValue(value)
         setUserPost(userPost)
       }
     }
@@ -236,10 +244,10 @@ const ProfilePage = () => {
                     {user?.postsCount > 1 ? `${user?.postsCount} Posts` : `${user?.postsCount} Posts`}
                   </div>
                   <div className={clasess.followers}>
-                    {user?.followerCount} Followers
+                    {user?.followerCount <= 0 ? 0 : user?.followerCount-1} Followers
                   </div>
                   <div className={clasess.following}>
-                    5 Following
+                    {user?.followingCount} Following
                   </div>
                 </div>
               </div>
@@ -257,7 +265,8 @@ const ProfilePage = () => {
           >
             <Tab className={clasess.tab} icon={<ImageIcon className={clasess.icon} />} aria-label="post"  {...a11yProps(0)} />
             <Tab className={clasess.tab} icon={<FavoriteIcon className={clasess.icon} />} aria-label="favorite"  {...a11yProps(1)} />
-            <Tab className={clasess.tab} icon={<SupervisedUserCircleIcon className={clasess.icon} />} aria-label="person"  {...a11yProps(2)} />
+            <Tab className={clasess.tab} icon={<SupervisedUserCircleIcon className={clasess.icon} />} aria-label="followers"  {...a11yProps(2)} />
+            <Tab className={clasess.tab} icon={<RecentActorsIcon className={clasess.icon} />} aria-label="following"  {...a11yProps(3)} />
           </Tabs>
         </Paper>
         <TabPanel value={value} index={0} className={clasess.tabPanel}>
@@ -266,6 +275,8 @@ const ProfilePage = () => {
         <TabPanel value={value} index={1} className={clasess.tabPanel}>
         </TabPanel>
         <TabPanel value={value} index={2} className={clasess.tabPanel}>
+        </TabPanel>
+        <TabPanel value={value} index={3} className={clasess.tabPanel}>
         </TabPanel>
       </div>
     </div>

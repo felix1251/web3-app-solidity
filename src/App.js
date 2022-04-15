@@ -53,14 +53,15 @@ export default function App() {
         dispatch(setAddress(accs[0]))
         const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
         const userDetails = await lixtagram.methods.getUserDetails(accs[0]).call()
+        const folCount = await lixtagram.methods.getFollowedAndFollowersCount(accs[0]).call()
         const currUser = {
           name: userDetails[0],
           tokens: userDetails[1],
           postsCount: userDetails[2],
           redeemTokens: userDetails[3],
           uadd: userDetails[4],
-          followerCount: userDetails[5],
-          followers: userDetails[6],
+          followerCount: folCount[0],
+          followingCount: folCount[1],
         }
         dispatch(setUser(currUser))
         
