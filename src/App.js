@@ -18,6 +18,7 @@ import Modal from "./components/Modal"
 import Stepper from "./components/LoginStepperPage/Stepper"
 import { useStyle } from './components/LoginLayout/styles';
 import { Paper } from '@material-ui/core';
+import { getUser } from "./redux/abiCalls";
 
 export default function App() {
   const dispatch = useDispatch()
@@ -36,8 +37,8 @@ export default function App() {
         window.web3 = new Web3(window.ethereum)
         web3 = window.web3
         await window.ethereum.request({ method: "eth_requestAccounts" });
-        await window.ethereum.on("chainChanged", () => { window.location.reload() });
-        await window.ethereum.on("accountsChanged", () => { window.location.reload() });
+        await window.ethereum.on("chainChanged", () => { window.location = "/" });
+        await window.ethereum.on("accountsChanged", () => { window.location = "/" });
         dispatch(setIsDownloaded(true))
         loadUser()
       } else {
@@ -52,19 +53,7 @@ export default function App() {
         const accs = await web3.eth.getAccounts();
         dispatch(setAddress(accs[0]))
         const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
-        const userDetails = await lixtagram.methods.getUserDetails(accs[0]).call()
-        const folCount = await lixtagram.methods.getFollowedAndFollowersCount(accs[0]).call()
-        const currUser = {
-          name: userDetails[0],
-          tokens: userDetails[1],
-          postsCount: userDetails[2],
-          redeemTokens: userDetails[3],
-          uadd: userDetails[4],
-          followerCount: folCount[0],
-          followingCount: folCount[1],
-        }
-        dispatch(setUser(currUser))
-        
+        getUser(dispatch, lixtagram, accs[0])
       } catch (error) {
         console.log(error.message)
       }
@@ -103,8 +92,10 @@ export default function App() {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route exact path="/profile">
+        <Route path="/profile">
           <Profile />
+        </Route>
+        <Route path="/user/:id">
         </Route>
         <Redirect from="*" to="/" />
       </Switch>

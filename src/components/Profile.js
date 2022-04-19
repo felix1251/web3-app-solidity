@@ -47,7 +47,7 @@ function Profile(props) {
       {(accountName || caption) && !hideAccountName && (
         <div className="textContainer">
           {user?.name
-            ? <><span className="accountName">{accountName} {follow && <span className={follow} onClick={followUser}>{follow}</span>}</span> </>
+            ? <><span className="accountName">{accountName} {accountName?.length > 8 && <br/>} {follow && <span className={follow} onClick={followUser}>{follow}</span>}</span> </>
             : <Skeleton animation="wave" height={20} width="80%" style={{ marginBottom: 5, backgroundColor: "#696969" }} />
           }
           {user?.name ? <span className={`caption ${captionSize}`}>{caption}</span> : <Skeleton animation="wave" height={16} width="60%" style={{ backgroundColor: "#696969" }} />}

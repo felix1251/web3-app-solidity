@@ -1,5 +1,4 @@
 .wrap{
-    position: relative;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -11,22 +10,31 @@
     object-fit: cover;
    
     @media only screen and (max-width: 800px) {
-        width: 180px;
-        height: 160px;
+        width: 200px;
+        height: 180px;
     }
 
     @media only screen and (max-width: 650px) {
-        width: 150px;
-        height: 130px;
+        aspect-ratio: 1.1 / 1;
+        width: 180.5px;
+        height: auto;
+    }
+
+    @media only screen and (max-width: 600px) {
+        aspect-ratio: 1.1 / 1;
+        width: 170.5px;
+        height: auto;
+    }
+
+    @media only screen and (max-width: 550px) {
+        aspect-ratio: 1.1 / 1;
+        width: 160.5px;
+        height: auto;
     }
       
     @media only screen and (max-width: 500px) {
-        width: 115px;
-        height: 95px;
+        aspect-ratio: 1.1 / 1;
+        width: 118.5px;
+        height: auto;
     }
-    @media only screen and (max-width: 360px) {
-        width: 105px;
-        height: 85px;
-    }
-    
 }

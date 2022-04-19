@@ -7,9 +7,9 @@ import Lixtagram from "../abis/Lixtagram.json"
 import { Card, makeStyles, responsiveFontSizes, createTheme, Paper, Tabs, Tab, Typography, Box } from "@material-ui/core";
 import "../styles/_variables.scss"
 import Profile from "../components/Profile";
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import ImageIcon from '@material-ui/icons/Image';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 
@@ -201,11 +201,11 @@ const ProfilePage = () => {
         const userPost = await lixtagram.methods.getUserPublicPost(user?.uadd).call()
         const fol = await lixtagram.methods.getFollowedAndFollowers(user?.uadd).call()
         const value = {
-          followers: fol[2],
-          following: fol[3],
+          followers: fol[0],
+          following: fol[1],
         }
-        setFolValue(value)
         setUserPost(userPost)
+        setFolValue(value)
       }
     }
     load()
@@ -264,7 +264,7 @@ const ProfilePage = () => {
             aria-label="icon tabs example"
           >
             <Tab className={clasess.tab} icon={<ImageIcon className={clasess.icon} />} aria-label="post"  {...a11yProps(0)} />
-            <Tab className={clasess.tab} icon={<FavoriteIcon className={clasess.icon} />} aria-label="favorite"  {...a11yProps(1)} />
+            <Tab className={clasess.tab} icon={<AssessmentIcon className={clasess.icon} />} aria-label="favorite"  {...a11yProps(1)} />
             <Tab className={clasess.tab} icon={<SupervisedUserCircleIcon className={clasess.icon} />} aria-label="followers"  {...a11yProps(2)} />
             <Tab className={clasess.tab} icon={<RecentActorsIcon className={clasess.icon} />} aria-label="following"  {...a11yProps(3)} />
           </Tabs>

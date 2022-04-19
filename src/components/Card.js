@@ -6,6 +6,30 @@ import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import SendIcon from '@material-ui/icons/Send';
+import InputBase from '@material-ui/core/InputBase';
+import IconButton from '@material-ui/core/IconButton';
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      padding: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      width: "100%",
+    },
+    input: {
+      color: "white",
+      flex: 1,
+      fontSize: 13,
+    },
+    iconButton: {
+      padding: 10,
+      color: "white"
+    },
+  }),
+);
 
 function Card(props) {
   const {
@@ -20,19 +44,37 @@ function Card(props) {
     ownerName
   } = props;
 
+  const classes = useStyles();
   const [isLiker, setIsLiker] = useState(false);
   const [isFollowed, setIsFollowed] = useState(false);
   const acc = useSelector(state => state.user.currUser);
+  const [comment, setComment] = useState("");
+  const [comms, setComms] = useState([])
 
   useEffect(() => {
     const load = async () => {
+      setComms(comments)
       const isFollowed = await lixtagram.methods.isFollower(acc?.uadd, ownerAdr).call()
       const isLiker = await lixtagram.methods.isLiker(acc?.uadd, postId).call();
       setIsFollowed(isFollowed);
       setIsLiker(isLiker);
     }
     load()
-  }, [ownerAdr, postId, lixtagram, acc])
+  }, [ownerAdr, postId, lixtagram, acc, comments])
+
+  const addComment = async (event) => {
+    event.preventDefault()
+    if (comment.length !== 0) {
+      await lixtagram.methods.addComment(postId, comment).send({ from: acc?.uadd });
+      setComment("")
+    } else {
+      alert("Enter a comment first!")
+    }
+  }
+
+  const inputChanged = (value) => {
+    setComment(value)
+  }
 
   return (
     <div className="card">
@@ -41,7 +83,7 @@ function Card(props) {
         <CardButton className="cardButton" />
       </header>
       <img className="cardImage" src={image} alt="card content" />
-      <CardMenu isLiker={isLiker} setIsLiker={setIsLiker} postId={postId} lixtagram={lixtagram} acc={acc?.uadd} ownerAdr={ownerAdr}/>
+      <CardMenu isLiker={isLiker} setIsLiker={setIsLiker} postId={postId} lixtagram={lixtagram} acc={acc?.uadd} ownerAdr={ownerAdr} />
       <div className="likedBy">
         <Profile iconSize="small" hideAccountName={true} currUser={likes[0].adr} />
         <span>
@@ -55,10 +97,10 @@ function Card(props) {
         </span>
       </div>
       <div className="comments">
-        {comments.map((comment) => {
+        {comms.map((comment, key) => {
           return (
             <Comment
-              key={comment.time}
+              key={key}
               accountName={comment.adrName}
               accAdr={comment.adr}
               comment={comment.comment}
@@ -68,8 +110,17 @@ function Card(props) {
       </div>
       <div className="timePosted">{` Posted ${moment.unix(time).fromNow()}`}</div>
       <div className="addComment">
-        <div className="commentText">Add a comment...</div>
-        <div className="postText">Post</div>
+        <form className={classes.root} onSubmit={e => addComment(e)}>
+          <InputBase
+            value={comment}
+            className={classes.input}
+            placeholder="Add comment..."
+            onChange={e => {inputChanged(e.target.value)}}
+          />
+          <IconButton type="submit" className={classes.iconButton} aria-label="send">
+            <SendIcon />
+          </IconButton>
+        </form>
       </div>
     </div>
   );

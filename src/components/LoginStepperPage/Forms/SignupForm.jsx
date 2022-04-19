@@ -21,19 +21,28 @@ const SignupForm = () => {
     const networkData = Lixtagram.networks[networkId];
     const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
     try {
-      await lixtagram.methods.signUp(name).send({
-        from: accs[0],
-        value: web3.utils.toWei("0.001", "ether"),
-      });
-      const userDetails = await lixtagram.methods.getUserDetails(accs[0]).call();
-      const currUser = {
-        name: userDetails[0],
-        tokens: userDetails[1],
-        postsCount: userDetails[2],
-        redeemTokens: userDetails[3],
-        uadd: userDetails[4]
+      if (name.length <= 10 && name.length !== 0) {
+        await lixtagram.methods.signUp(name).send({
+          from: accs[0],
+          value: web3.utils.toWei("0.001", "ether"),
+        });
+        const userDetails = await lixtagram.methods.getUserDetails(accs[0]).call();
+        const currUser = {
+          name: userDetails[0],
+          tokens: userDetails[1],
+          postsCount: userDetails[2],
+          redeemTokens: userDetails[3],
+          uadd: userDetails[4]
+        }
+        dispatch(setUser(currUser))
+      } else {
+        if (name.length > 0) {
+          alert("Username must be equal or lesser than 10 characters")
+        }
+        else {
+          alert("Enter username first, username must not be empty")
+        }
       }
-      dispatch(setUser(currUser))
     } catch (error) {
       console.log(error.message)
     }

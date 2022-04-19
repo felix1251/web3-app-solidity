@@ -5,11 +5,13 @@ contract Lixtagram {
 
     struct Followers {
         address follower;
+        string name;
         uint time;
     }
 
     struct Followings {
         address followed;
+        string name;
         uint time;
     }
 
@@ -106,7 +108,6 @@ contract Lixtagram {
             allPostCount = 0;
         }
         uint randomId = uint(keccak256(abi.encodePacked(now, msg.sender, block.difficulty)));
-            
         Post memory newPost = Post({
             id: randomId,
             imgIpfsHash: imgIpfsHash,
@@ -142,7 +143,7 @@ contract Lixtagram {
             postsCount: 0
         });
         peeps.push(newUser);
-        followers[msg.sender].push(Followers(msg.sender, now));
+        followers[msg.sender].push(Followers(msg.sender, getUsername(msg.sender) ,now));
     }
 
     function isUser(address user) private view returns (bool) {
@@ -175,15 +176,15 @@ contract Lixtagram {
     function followUser(address adr) public payable{
         address author = followers[adr][0].follower;
         uint len = followers[adr].length;
-        require(msg.sender !=  adr, "you can't folow your own account");
+        require(msg.sender !=  author || msg.sender !=  adr, "you can't folow your own account");
         for(uint i = 0; i < len; i++){
             if(msg.sender == followers[adr][i].follower){
                 require(msg.sender !=  followers[adr][i].follower, "You already follow the user!");
                 break;
             }
         }
-        followers[adr].push(Followers(msg.sender, now));
-        followings[msg.sender].push(Followings(adr, now));
+        followers[adr].push(Followers(msg.sender, getUsername(adr), now));
+        followings[msg.sender].push(Followings(adr, getUsername(msg.sender) ,now));
         for (uint256 i = 0; i < peeps.length; i++) {
             if (peeps[i].uadd == author) {
                 peeps[i].tokens += 1;
@@ -237,6 +238,10 @@ contract Lixtagram {
         return p;
     }
 
+    function addComment(uint _id, string memory comment) public {
+        comments[_id].push(Comments(msg.sender, comment, now));
+    }
+
     function getComments(uint _id) private view returns (Comments[] memory){
       uint len  = comments[_id].length;
       Comments[] memory c = new Comments[](len);
@@ -268,12 +273,13 @@ contract Lixtagram {
 
     function getViewPostComments(uint _id) private view returns (FilterComments[] memory){
         Comments[] memory c = getComments(_id);
-        FilterComments[] memory nc = new FilterComments[](c.length);
+        FilterComments[] memory nc = new FilterComments[](3);
         for(uint i; i < c.length; i++){
             nc[i].adr = c[i].adr;
             nc[i].adrName = getUsername(c[i].adr); 
             nc[i].comment = c[i].comment; 
-            nc[i].time = c[i].time;
+            nc[i].time = c[i].time; 
+            if(i == 2) break;
         }
         return nc;
      }
@@ -315,18 +321,6 @@ contract Lixtagram {
     function getNumberOffollowwers(address adr) public view returns (uint){
         return followers[adr].length;
     }
-
-    // function getPostIsPublic() public view returns (Post[] memory){
-    //     uint postLength = posts.length;
-    //     Post[] memory p = new Post[](postLength);
-    //     for (uint i = 0; i < postLength; i++) {
-    //         Post storage post = posts[i];
-    //         if(posts[i].isPublic == true){
-    //             p[i] = post;
-    //         }
-    //     }
-    //     return p;
-    // }
 
     function getPostsCount() public view returns (uint256) {
         return posts.length;
