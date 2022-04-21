@@ -46,13 +46,14 @@ function Upload(props) {
   const [message, setMessage] = useState("")
 
   const onSubmit = async (event) => {
-    if (description !== "" && imgIpfsHash !== "") {
-      event.preventDefault();
-      window.web3 = new Web3(window.ethereum)
-      var web3 = window.web3
-      const networkId = await web3.eth.net.getId();
-      const networkData = Lixtagram.networks[networkId];
-      const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
+    event.preventDefault();
+    window.web3 = new Web3(window.ethereum)
+    var web3 = window.web3
+    const networkId = await web3.eth.net.getId();
+    const networkData = Lixtagram.networks[networkId];
+    const lixtagram = new web3.eth.Contract(Lixtagram.abi, networkData.address);
+    const checkIfHashExist = await lixtagram.methods.checkIfImageExist(imgIpfsHash).call();
+    if (description !== "" && imgIpfsHash !== "" && !checkIfHashExist) {
       try {
         const accs = await web3.eth.getAccounts();
         await lixtagram.methods
@@ -62,6 +63,7 @@ function Upload(props) {
             value: web3.utils.toWei("0.001", "ether"),
           });
         setUploading(false)
+        setImgIpfsHash("")
         setDescription("")
         onClose(false)
         history.push("/profile")
@@ -72,34 +74,40 @@ function Upload(props) {
     }else{
       if(description === ""){
         alert("Description must not empty")
+      }else if(checkIfHashExist){
+        alert("This image is already owned or exist in the network")
       }
     }
   };
 
-  const compressFile = (file) =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(file, 2000, 2000, "JPEG", 75, 0,
-        (uri) => {
-          resolve(uri);
-        },
-        "blob"
-      );
-    });
+  // const compressFile = (file) =>
+  //   new Promise((resolve) => {
+  //     Resizer.imageFileResizer(file, 2000, 2000, "JPEG", 100, 0,
+  //       (uri) => {
+  //         resolve(uri);
+  //       },
+  //       "blob"
+  //     );
+  //   });
 
   const captureFile = async (event) => {
     event.preventDefault();
     setUploading(true)
-    setMessage("Rendering Image..")
     const file = event.target.files[0];
-    const img = await compressFile(file)
-    let reader = new window.FileReader();
-    reader.readAsArrayBuffer(img);
-    reader.onloadend = () => convertToBuffer(reader);
+    const imageSizeInMb = file.size/(1024**2)
+    if(imageSizeInMb < 3){
+      setMessage("Rendering Image..")
+      let reader = new window.FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onloadend = () => convertToBuffer(reader);
+    }else{
+      alert("image to large, maximum allowed is 3 mb")
+    }
   };
 
   const convertToBuffer = async (reader) => {
-    setMessage("Generating IPFS Hash...")
     const buffer = Buffer.from(reader.result);
+    setMessage("Generating IPFS Hash...")
     const ipfsHash = await ipfs.add(buffer);
     setImgIpfsHash(ipfsHash[0].hash)
     setUploading(false)

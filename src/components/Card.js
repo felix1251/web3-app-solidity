@@ -67,6 +67,7 @@ function Card(props) {
     if (comment.length !== 0) {
       await lixtagram.methods.addComment(postId, comment).send({ from: acc?.uadd });
       setComment("")
+      setComms(prev => [...prev, {adr: acc?.uadd, adrName: acc?.name, comment: comment, time: Date.now()}])
     } else {
       alert("Enter a comment first!")
     }
